@@ -1,10 +1,6 @@
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -16,6 +12,7 @@ public class Server{
     public JFrame jFrame;
     public Socket connect;
     DefaultCaret caret;
+    ServerThread serverThread;
     Set<ServerThread> threadlist;
     Set<String> username = new HashSet<>();
 
@@ -56,8 +53,7 @@ public class Server{
             ServerSocket server = new ServerSocket(port_number,10);
             while (true) {
                 connect = server.accept();
-                field_area.append("Connected ...\n\n");
-                ServerThread serverThread = new ServerThread(connect, this);
+                serverThread = new ServerThread(connect, this);
                 threadlist.add(serverThread);
                 serverThread.start();
             }
@@ -67,9 +63,21 @@ public class Server{
         }
     }
 
-    public void printToAllClients(String msg, ServerThread dUser) {
-        for (ServerThread ls : threadlist) {
+    public void printToAllClients(String msg){
+        for(ServerThread ls: threadlist){
             ls.output.println(msg);
         }
+    }
+
+    public void printToClient(){
+        serverThread.output.println("[Server]: "+"Connected Successfully");
+    }
+
+    public Set<String> getUsername() {
+        return username;
+    }
+
+    public void addUsername(String user){
+        username.add(user);
     }
 }

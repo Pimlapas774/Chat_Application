@@ -67,6 +67,8 @@ public class Client extends Thread implements ActionListener {
     public void ConnectToServer() {
         try {
             connect = new Socket(InetAddress.getLocalHost(),port_number);
+            output = new PrintWriter(connect.getOutputStream(),true);
+            output.println(client_name);
         } catch (IOException e) {
             e.printStackTrace();
         }
