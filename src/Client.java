@@ -120,6 +120,7 @@ public class Client extends Thread implements ActionListener {
             message = chat_field.getText();
             if (!message.isEmpty()) {
                 chat_field.setText("");
+                chat_area.append("\n"+" "+message+"\n");
                 Send_message();
             }
         }

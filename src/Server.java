@@ -63,14 +63,23 @@ public class Server{
         }
     }
 
-    public void printToAllClients(String msg){
+    public void printToAllClients(String msg, ServerThread excluded_user){
         for(ServerThread ls: threadlist){
-            ls.output.println(msg);
+            if(ls != excluded_user) {
+                ls.output.println(msg);
+            }
         }
     }
 
     public void printToClient(){
         serverThread.output.println("[Server]: "+"Connected Successfully");
+    }
+
+    public void printAnnounce(){
+        for(ServerThread ls: threadlist) {
+            ls.output.println("[Server]: " + "[" + serverThread.user_name + "]"
+                    + "has joined!" + "");
+        }
     }
 
     public Set<String> getUsername() {

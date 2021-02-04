@@ -27,10 +27,11 @@ public class ServerThread extends Thread {
             server.getField_area().append("Connected user: "+"["+user_name+"]\n");
 
             server.printToClient();
+            server.printAnnounce();
 
             while (true){
                 String outputstr = bufferedReader.readLine();
-                server.printToAllClients(outputstr);
+                server.printToAllClients(outputstr,this);
             }
         } catch (IOException e) {
             e.printStackTrace();
