@@ -1,7 +1,5 @@
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Set;
 
 public class ServerThread extends Thread {
     public PrintWriter output;
@@ -39,7 +37,7 @@ public class ServerThread extends Thread {
                 server.printToAllClients("[Server]: " + "[" + user_name + "]" + " has left!",this);
             }
             socket.close();
-
+            server.removeUsernames(user_name);
 
         } catch (IOException e) {
             e.printStackTrace();

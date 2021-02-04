@@ -41,7 +41,7 @@ public class Client extends Thread implements ActionListener {
         jFrame.setLayout(new BorderLayout());
         chat_area.setFont(font);
         chat_area.setEditable(false);
-//        chat_area.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+//        chat_area.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         jFrame.add(new JScrollPane(chat_area), BorderLayout.CENTER);
         chat_field.setFont(font);
 
@@ -142,7 +142,7 @@ public class Client extends Thread implements ActionListener {
             message = chat_field.getText();
             if (!message.isEmpty()) {
                 chat_field.setText("");
-                chat_area.append("\n"+" "+message+"\n");
+                chat_area.append("\n"+"[\" "+client_name+" \"]: "+message+"\n");
                 Send_message();
             }
         }

@@ -84,6 +84,10 @@ public class Server{
         usernames.add(user);
     }
 
+    public void removeUsernames(String user){
+        usernames.remove(user);
+    }
+
     public boolean isUsername(){
         return !usernames.isEmpty();
     }
