@@ -14,7 +14,7 @@ public class Server{
     DefaultCaret caret;
     ServerThread serverThread;
     Set<ServerThread> threadlist;
-    Set<String> username = new HashSet<>();
+    Set<String> usernames = new HashSet<>();
 
 
     public Server(){
@@ -71,22 +71,20 @@ public class Server{
         }
     }
 
-    public void printToClient(){
-        serverThread.output.println("[Server]: "+"Connected Successfully");
+    public void printToClient(String notice){
+        serverThread.output.println(notice);
     }
 
-    public void printAnnounce(){
-        for(ServerThread ls: threadlist) {
-            ls.output.println("[Server]: " + "[" + serverThread.user_name + "]"
-                    + "has joined!" + "");
-        }
+
+    public Set<String> getUsernames() {
+        return usernames;
     }
 
-    public Set<String> getUsername() {
-        return username;
+    public void addUsernames(String user){
+        usernames.add(user);
     }
 
-    public void addUsername(String user){
-        username.add(user);
+    public boolean isUsername(){
+        return !usernames.isEmpty();
     }
 }

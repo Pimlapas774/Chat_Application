@@ -3,12 +3,15 @@ import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Locale;
 
 public class Client extends Thread implements ActionListener {
     private static final int port_number = 9080;
@@ -20,7 +23,7 @@ public class Client extends Thread implements ActionListener {
     DefaultCaret caret;
 
     private String client_name;
-    private Socket connect;
+    public Socket connect;
     String message;
     PrintWriter output;
     BufferedReader br;
@@ -61,13 +64,32 @@ public class Client extends Thread implements ActionListener {
     @Override
     public void run() {
         ConnectToServer();
+        if(connect == null){
+            showConnectFailed();
+            do {
+                ConnectToServer();
+            }while (connect ==null);
+        }
         Recieve_message(connect);
+        jFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                try {
+                    connect.close();
+                    br.close();
+                    output.close();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
     }
 
     public void ConnectToServer() {
         try {
-            connect = new Socket(InetAddress.getLocalHost(),port_number);
-            output = new PrintWriter(connect.getOutputStream(),true);
+            connect = new Socket(InetAddress.getLocalHost(), port_number);
+            output = new PrintWriter(connect.getOutputStream(), true);
             output.println(client_name);
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,13 +113,9 @@ public class Client extends Thread implements ActionListener {
                 chat_area.append("\n"+" "+response + "\n");
             }
         } catch (IOException e) {
+            chat_area.append("\n"+" Connect failed. " +
+                    "Please restart program!\n");
             e.printStackTrace();
-        }finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -111,6 +129,10 @@ public class Client extends Thread implements ActionListener {
 
     public void setClient_name(String client_name) {
         this.client_name = client_name;
+    }
+
+    public void showConnectFailed(){
+        chat_area.append(" !!Connect failed!!");
     }
 
 
