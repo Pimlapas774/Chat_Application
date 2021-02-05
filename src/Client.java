@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Locale;
 
 public class Client extends Thread implements ActionListener {
     private static final int port_number = 9080;
@@ -19,7 +18,9 @@ public class Client extends Thread implements ActionListener {
     private JTextArea chat_area;
 //    private JButton send_bt;
     private JPanel jPanel;
+    private JPanel headPane;
     public JFrame jFrame;
+    public JScrollPane jScrollPane;
     DefaultCaret caret;
 
     private String client_name;
@@ -32,24 +33,37 @@ public class Client extends Thread implements ActionListener {
         jFrame = new JFrame();
         chat_field = new JTextField();
         chat_area = new JTextArea();
-//        send_bt = new JButton("Send");
 
-
-        Font font = new Font("Tahoma",Font.PLAIN,14);
+        Font font = new Font("Tahoma",Font.BOLD,14);
         jPanel = new JPanel(new BorderLayout());
         jPanel.setPreferredSize(new Dimension(500,25));
         jFrame.setLayout(new BorderLayout());
+        jFrame.setContentPane(new JLabel(new ImageIcon("sunset_bg.png")));
+        jFrame.setLayout(new BorderLayout());
         chat_area.setFont(font);
         chat_area.setEditable(false);
-//        chat_area.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        jFrame.add(new JScrollPane(chat_area), BorderLayout.CENTER);
+        chat_area.setOpaque(false);
+        chat_area.setBackground(new Color(1,1,1,100));
+        jScrollPane = new JScrollPane(chat_area);
+        jScrollPane.getViewport().setOpaque(false);
+        jScrollPane.setOpaque(false);
+        jFrame.add(jScrollPane, BorderLayout.CENTER);
+
+        headPane = new JPanel(new BorderLayout());
+        Label headlabel = new Label("ChatRoom");
+        headlabel.setFont(new Font("Tahoma",Font.BOLD,28));
+        headlabel.setForeground(Color.WHITE);
+        headPane.setBackground(Color.PINK);
+        headlabel.setAlignment(Label.CENTER);
+        headPane.add(headlabel,BorderLayout.CENTER);
+        jFrame.add(headPane,BorderLayout.NORTH);
+
         chat_field.setFont(font);
 
-        JLabel jLabel = new JLabel("สนทนา");
+        JLabel jLabel = new JLabel("ข้อความ: ");
         jLabel.setFont(new Font("Tahoma",Font.BOLD,14));
         jPanel.add(jLabel, BorderLayout.WEST);
         jPanel.add(chat_field, BorderLayout.CENTER);
-//        jPanel.add(send_bt,BorderLayout.EAST);
         jFrame.add(jPanel,BorderLayout.SOUTH);
         caret = (DefaultCaret) chat_area.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -85,6 +99,7 @@ public class Client extends Thread implements ActionListener {
             }
         });
     }
+
 
     public void ConnectToServer() {
         try {
@@ -125,10 +140,6 @@ public class Client extends Thread implements ActionListener {
 
     public String getClient_name() {
         return client_name;
-    }
-
-    public void setClient_name(String client_name) {
-        this.client_name = client_name;
     }
 
     public void showConnectFailed(){
