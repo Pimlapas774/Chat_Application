@@ -20,12 +20,13 @@ public class Client extends Thread implements ActionListener {
     PrintWriter output;
     BufferedReader br;
 
-    public Client() {
+    public Client(){
         clientGui = new Client_GUI();
 
         clientGui.chat_field.addActionListener(this);
-        client_name = JOptionPane.showInputDialog(clientGui.jFrame, "Please,Enter your name", "Welcome to " +
-                "Chatroom", JOptionPane.PLAIN_MESSAGE);
+        clientGui.history_bt.addActionListener(this);
+        client_name = JOptionPane.showInputDialog(clientGui.jFrame,"Please,Enter your name","Welcome to " +
+                "Chatroom",JOptionPane.PLAIN_MESSAGE);
         start();
 
 
@@ -34,11 +35,11 @@ public class Client extends Thread implements ActionListener {
     @Override
     public void run() {
         ConnectToServer();
-        if (connect == null) {
+        if(connect == null){
             showConnectFailed();
             do {
                 ConnectToServer();
-            } while (connect == null);
+            }while (connect ==null);
         }
         Recieve_message(connect);
         clientGui.jFrame.addWindowListener(new WindowAdapter() {
@@ -67,24 +68,25 @@ public class Client extends Thread implements ActionListener {
         }
     }
 
-    public void Send_message() {
+    public void Send_message(){
         try {
             output = new PrintWriter(connect.getOutputStream(), true);
-            output.println("[" + client_name + "]: " + message);
+//            output.println("["+client_name+"]: "+message);
+            output.println(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void Recieve_message(Socket socket) {
+    public void Recieve_message(Socket socket){
         try {
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            while (true) {
+            while (true){
                 String response = br.readLine();
-                clientGui.chat_area.append("\n" + " " + response + "\n");
+                clientGui.chat_area.append("\n"+" "+response + "\n");
             }
         } catch (IOException e) {
-            clientGui.chat_area.append("\n" + " Connect failed. " +
+            clientGui.chat_area.append("\n"+" Connect failed. " +
                     "Please restart program!\n");
             e.printStackTrace();
         }
@@ -95,20 +97,23 @@ public class Client extends Thread implements ActionListener {
         return client_name;
     }
 
-    public void showConnectFailed() {
+    public void showConnectFailed(){
         clientGui.chat_area.append(" !!Connect failed!!");
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() instanceof JTextField) {
+        if(e.getSource()instanceof JTextField) {
             message = clientGui.chat_field.getText();
             if (!message.isEmpty()) {
                 clientGui.chat_field.setText("");
-                clientGui.chat_area.append("\n" + "[\" " + client_name + " \"]: " + message + "\n");
+//                clientGui.chat_area.append("\n"+"[\" "+client_name+" \"]: "+message+"\n");
                 Send_message();
             }
+        }
+        if(e.getSource()instanceof JButton){
+            new LogRoom(this);
         }
     }
 }

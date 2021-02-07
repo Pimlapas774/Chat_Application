@@ -1,6 +1,8 @@
 import java.io.File;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Set;
 
@@ -11,10 +13,17 @@ public class Server{
     ServerThread serverThread;
     Set<ServerThread> threadlist;
     Set<String> usernames = new HashSet<>();
+    DateTimeFormatter tf_msg;
+    DateTimeFormatter tf_server;
+    DateTimeFormatter df_msg;
+    LocalDateTime now;
 
 
     public Server(){
         serverGui = new Server_GUI();
+        tf_server = DateTimeFormatter.ofPattern("HH:mm:ss");
+        tf_msg = DateTimeFormatter.ofPattern("HH:mm");
+        df_msg = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
         Thread th1 = new Thread(new Runnable() {
             @Override
@@ -43,15 +52,14 @@ public class Server{
         }
     }
 
-    public void printToAllClients(String msg, ServerThread excluded_user){
+    public void printMsgToAllClients(String msg){
+        now = LocalDateTime.now();
         for(ServerThread ls: threadlist){
-            if(ls != excluded_user) {
-                ls.output.println(msg);
-            }
+            ls.output.println(msg + " {" + tf_msg.format(now) + "}");
         }
     }
 
-    public void printToClient(String notice){
+    public void printNoticeToClient(String notice){
         serverThread.output.println(notice);
     }
 

@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 public class ServerThread extends Thread {
     public PrintWriter output;
@@ -22,19 +23,23 @@ public class ServerThread extends Thread {
 
             user_name = bufferedReader.readLine();
             server.addUsernames(user_name);
-            server.serverGui.field_area.append("Connected user: "+"["+user_name+"]\n");
+            server.now = LocalDateTime.now();
+            server.serverGui.field_area.append("Connected user: "+"["+user_name+"]"+
+                    " ("+ server.tf_server.format(server.now)+")"+"\n");
 
-            server.printToClient("[Server]: "+"Connected Successfully");
-            server.printToAllClients("[Server]: " + "[" + user_name + "]"
-                    + " has joined!",this);
+            server.printNoticeToClient("[Server]: "+"Connected Successfully");
+            server.printMsgToAllClients("[Server]: " + "[" + user_name + "]"
+                    + " has joined!");
             try {
                 while (true) {
                     outputstr = bufferedReader.readLine();
-                    server.printToAllClients(outputstr, this);
+                    server.printMsgToAllClients("[" + user_name + "]: " + outputstr);
                 }
             }catch (Exception e){//when the user closed program, telling to other users.
-                server.serverGui.field_area.append("Disconnected user: "+"["+user_name+"]\n");
-                server.printToAllClients("[Server]: " + "[" + user_name + "]" + " has left!",this);
+                server.now = LocalDateTime.now();
+                server.serverGui.field_area.append("Disconnected user: "+"["+user_name+"]"+
+                        " ("+ server.tf_server.format(server.now)+")"+"\n");
+                server.printMsgToAllClients("[Server]: " + "[" + user_name + "]" + " has left!");
             }
             socket.close();
             server.removeUsernames(user_name);
