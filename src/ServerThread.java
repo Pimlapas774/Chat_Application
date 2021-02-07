@@ -22,7 +22,7 @@ public class ServerThread extends Thread {
 
             user_name = bufferedReader.readLine();
             server.addUsernames(user_name);
-            server.getField_area().append("Connected user: "+"["+user_name+"]\n");
+            server.serverGui.field_area.append("Connected user: "+"["+user_name+"]\n");
 
             server.printToClient("[Server]: "+"Connected Successfully");
             server.printToAllClients("[Server]: " + "[" + user_name + "]"
@@ -33,7 +33,7 @@ public class ServerThread extends Thread {
                     server.printToAllClients(outputstr, this);
                 }
             }catch (Exception e){//when the user closed program, telling to other users.
-                server.getField_area().append("Disconnected user: "+"["+user_name+"]\n");
+                server.serverGui.field_area.append("Disconnected user: "+"["+user_name+"]\n");
                 server.printToAllClients("[Server]: " + "[" + user_name + "]" + " has left!",this);
             }
             socket.close();

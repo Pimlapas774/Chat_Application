@@ -5,13 +5,13 @@ public class MainServer{
     public MainServer() {
         Server server = new Server();
 
-        server.jFrame.setTitle("ChatServer");
-        server.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        server.jFrame.setResizable(false);
-        server.jFrame.setSize(400, 400);
+        server.serverGui.jFrame.setTitle("ChatServer");
+        server.serverGui.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        server.serverGui.jFrame.setResizable(false);
+        server.serverGui.jFrame.setSize(400, 400);
 
-        server.jFrame.setVisible(true);
-        server.jFrame.setLocationRelativeTo(null);
+        server.serverGui.jFrame.setVisible(true);
+        server.serverGui.jFrame.setLocationRelativeTo(null);
 
     }
     public static void main(String[] args) {

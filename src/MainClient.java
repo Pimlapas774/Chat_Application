@@ -4,14 +4,14 @@ public class MainClient {
 
     public MainClient(){
         Client client = new Client();
-        client.jFrame.setSize(500,600);
-        client.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.jFrame.setResizable(false);
-        client.jFrame.setVisible(true);
-        client.jFrame.setLocationRelativeTo(null);
+        client.clientGui.jFrame.setSize(500,600);
+        client.clientGui.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        client.clientGui.jFrame.setResizable(false);
+        client.clientGui.jFrame.setVisible(true);
+        client.clientGui.jFrame.setLocationRelativeTo(null);
 
-        client.getChat_field().requestFocus();
-        client.jFrame.setTitle("Client: "+client.getClient_name());
+        client.clientGui.chat_field.requestFocus();
+        client.clientGui.jFrame.setTitle("Client: "+client.getClient_name());
     }
 
     public static void main(String[] args) {
