@@ -3,11 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
+import java.io.*;
 import java.net.Socket;
 
 public class Client extends Thread implements ActionListener {
@@ -24,7 +20,7 @@ public class Client extends Thread implements ActionListener {
         clientGui = new Client_GUI();
 
         clientGui.chat_field.addActionListener(this);
-        clientGui.history_bt.addActionListener(this);
+//        clientGui.history_bt.addActionListener(this);
         client_name = JOptionPane.showInputDialog(clientGui.jFrame,"Please,Enter your name","Welcome to " +
                 "Chatroom",JOptionPane.PLAIN_MESSAGE);
         start();
@@ -60,10 +56,11 @@ public class Client extends Thread implements ActionListener {
 
     public void ConnectToServer() {
         try {
-            connect = new Socket(InetAddress.getLocalHost(), port_number);
+//            connect = new Socket(InetAddress.getLocalHost(), port_number);
+            connect = new Socket("192.168.1.134", port_number);
             output = new PrintWriter(connect.getOutputStream(), true);
             output.println(client_name);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -112,8 +109,8 @@ public class Client extends Thread implements ActionListener {
                 Send_message();
             }
         }
-        if(e.getSource()instanceof JButton){
-            new LogRoom(this);
-        }
+//        if(e.getSource()instanceof JButton){
+//            new LogRoom(this);
+//        }
     }
 }

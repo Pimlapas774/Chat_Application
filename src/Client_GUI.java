@@ -9,12 +9,14 @@ public class Client_GUI {
     public JPanel headPane;
     public JFrame jFrame;
     public JScrollPane jScrollPane;
+//    public JButton  history_bt;
     DefaultCaret caret;
 
     public Client_GUI() {
         jFrame = new JFrame();
         chat_field = new JTextField();
         chat_area = new JTextArea();
+//        history_bt = new JButton("History");
 
         Font font = new Font("Tahoma",Font.BOLD,14);
         jPanel = new JPanel(new BorderLayout());
@@ -46,6 +48,7 @@ public class Client_GUI {
         jLabel.setFont(new Font("Tahoma",Font.BOLD,14));
         jPanel.add(jLabel, BorderLayout.WEST);
         jPanel.add(chat_field, BorderLayout.CENTER);
+//        jPanel.add(history_bt, BorderLayout.EAST);
         jFrame.add(jPanel,BorderLayout.SOUTH);
         caret = (DefaultCaret) chat_area.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
