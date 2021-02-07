@@ -1,4 +1,3 @@
-import java.io.File;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDateTime;
@@ -18,17 +17,30 @@ public class Server{
     DateTimeFormatter df_msg;
     LocalDateTime now;
 
+    LogChat logChat;
+
 
     public Server(){
         serverGui = new Server_GUI();
+        logChat = new LogChat();
+        logChat.CreateTextfile();
         tf_server = DateTimeFormatter.ofPattern("HH:mm:ss");
         tf_msg = DateTimeFormatter.ofPattern("HH:mm");
         df_msg = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+        logChat.writeLog_File(df_msg.format(LocalDateTime.now())
+                +", "+tf_server.format(LocalDateTime.now()));
 
         Thread th1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 waitingClient();
+                while(true){
+                    if(tf_server.format(LocalDateTime.now()).equals("00:00:00")) {
+                        logChat.writeLog_File(df_msg.format(LocalDateTime.now())
+                                +", "+tf_server.format(LocalDateTime.now()));
+                    }
+                }
             }
         });
         th1.start();
@@ -54,9 +66,11 @@ public class Server{
 
     public void printMsgToAllClients(String msg){
         now = LocalDateTime.now();
+        String msg_ = msg+ " {" + tf_msg.format(now) + "}";
         for(ServerThread ls: threadlist){
-            ls.output.println(msg + " {" + tf_msg.format(now) + "}");
+            ls.output.println(msg_);
         }
+        logChat.writeLog_File(msg_);
     }
 
     public void printNoticeToClient(String notice){
