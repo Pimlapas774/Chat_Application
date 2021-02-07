@@ -51,7 +51,7 @@ public class Server{
         try {
             serverGui.field_area.append("Server running ...\n");
             serverGui.field_area.append("Waiting for clients\n");
-            ServerSocket server = new ServerSocket(port_number,10);
+            ServerSocket server = new ServerSocket(port_number);
             while (true) {
                 connect = server.accept();
                 serverThread = new ServerThread(connect, this);
