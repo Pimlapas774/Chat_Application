@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.Set;
 
 public class Server{
-    private static final int port_number = 9080;
+    private static final int port_number = 12221;
     Server_GUI serverGui;
     public Socket connect;
     ServerThread serverThread;
@@ -49,6 +49,7 @@ public class Server{
     public void waitingClient(){
         threadlist = new HashSet<>();
         try {
+
             serverGui.field_area.append("Server running ...\n");
             serverGui.field_area.append("Waiting for clients\n");
             ServerSocket server = new ServerSocket(port_number);

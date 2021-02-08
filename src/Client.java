@@ -7,7 +7,8 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client extends Thread implements ActionListener {
-    private static final int port_number = 9080;
+    private static final int port_number = 12221;
+    private String Sever_name = "158.108.213.135";//ipv4 address ,VPN ku
 
     Client_GUI clientGui;
     private String client_name;
@@ -57,7 +58,7 @@ public class Client extends Thread implements ActionListener {
     public void ConnectToServer() {
         try {
 //            connect = new Socket(InetAddress.getLocalHost(), port_number);
-            connect = new Socket("192.168.1.134", port_number);
+            connect = new Socket(Sever_name, port_number);
             output = new PrintWriter(connect.getOutputStream(), true);
             output.println(client_name);
         } catch (Exception e) {
