@@ -1,11 +1,14 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Set;
 
-public class Server{
+public class Server implements ActionListener {
     private static final int port_number = 12221;
     Server_GUI serverGui;
     public Socket connect;
@@ -17,16 +20,23 @@ public class Server{
     DateTimeFormatter df_msg;
     LocalDateTime now;
 
+    String server_massage;
+    String server_recieve;
     LogChat logChat;
+    BoxChatP boxChatP;
 
 
     public Server(){
         serverGui = new Server_GUI();
+        boxChatP = new BoxChatP();
         logChat = new LogChat();
         logChat.CreateTextfile();
         tf_server = DateTimeFormatter.ofPattern("HH:mm:ss");
         tf_msg = DateTimeFormatter.ofPattern("HH:mm");
         df_msg = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+        serverGui.server_header_bt.addActionListener(this);
+        serverGui.server_header_bt.setVisible(false);
 
         logChat.writeLog_File(df_msg.format(LocalDateTime.now())
                 +", "+tf_server.format(LocalDateTime.now()));
@@ -35,12 +45,6 @@ public class Server{
             @Override
             public void run() {
                 waitingClient();
-                while(true){
-                    if(tf_server.format(LocalDateTime.now()).equals("00:00:00")) {
-                        logChat.writeLog_File(df_msg.format(LocalDateTime.now())
-                                +", "+tf_server.format(LocalDateTime.now()));
-                    }
-                }
             }
         });
         th1.start();
@@ -57,6 +61,7 @@ public class Server{
                 connect = server.accept();
                 serverThread = new ServerThread(connect, this);
                 threadlist.add(serverThread);
+                serverGui.server_header_bt.setVisible(true);
                 serverThread.start();
             }
 
@@ -65,33 +70,39 @@ public class Server{
         }
     }
 
-    public void printMsgToAllClients(String msg){
+    public void printMsgToAllClients(String msg) throws UnknownHostException {
         now = LocalDateTime.now();
-        String msg_ = msg+ " {" + tf_msg.format(now) + "}";
+        server_recieve = msg;
+        server_massage = msg+ " {" + tf_msg.format(now) + "}";
         for(ServerThread ls: threadlist){
-            ls.output.println(msg_);
+            ls.output.println(boxChatP.BoxChatPMsgFormatter(server_massage,"GET_MSG"));
         }
-        logChat.writeLog_File(msg_);
+        logChat.writeLog_File(server_massage);
     }
 
     public void printNoticeToClient(String notice){
-        serverThread.output.println(notice);
+        server_massage = notice;
+        serverThread.output.println(server_massage);
     }
 
-
-    public Set<String> getUsernames() {
-        return usernames;
+    public void isUsername(String name){
+        if(usernames.contains(name)){
+            int random = (int)(Math.random()*1000);
+            serverThread.user_name[1] = name+""+random;
+        }
     }
 
     public void addUsernames(String user){
-        usernames.add(user);
+            usernames.add(user);
     }
 
     public void removeUsernames(String user){
         usernames.remove(user);
     }
 
-    public boolean isUsername(){
-        return !usernames.isEmpty();
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        new Server_header(this);
     }
 }

@@ -9,14 +9,13 @@ public class Client_GUI {
     public JPanel headPane;
     public JFrame jFrame;
     public JScrollPane jScrollPane;
-//    public JButton  history_bt;
+    public JButton client_header_bt;
     DefaultCaret caret;
 
     public Client_GUI() {
         jFrame = new JFrame();
         chat_field = new JTextField();
         chat_area = new JTextArea();
-//        history_bt = new JButton("History");
 
         Font font = new Font("Tahoma",Font.BOLD,14);
         jPanel = new JPanel(new BorderLayout());
@@ -42,13 +41,18 @@ public class Client_GUI {
         headPane.add(headlabel,BorderLayout.CENTER);
         jFrame.add(headPane,BorderLayout.NORTH);
 
+        JPanel pane_bbc = new JPanel(new BorderLayout());
+        client_header_bt = new JButton("header");
+        pane_bbc.add(client_header_bt, BorderLayout.EAST);
+        headPane.add(pane_bbc, BorderLayout.PAGE_END);
+
+
         chat_field.setFont(font);
 
         JLabel jLabel = new JLabel("ข้อความ: ");
-        jLabel.setFont(new Font("Tahoma",Font.BOLD,14));
+        jLabel.setFont(new Font("Tahoma",Font.PLAIN,14));
         jPanel.add(jLabel, BorderLayout.WEST);
         jPanel.add(chat_field, BorderLayout.CENTER);
-//        jPanel.add(history_bt, BorderLayout.EAST);
         jFrame.add(jPanel,BorderLayout.SOUTH);
         caret = (DefaultCaret) chat_area.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);

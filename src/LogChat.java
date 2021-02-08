@@ -16,22 +16,6 @@ public class LogChat {
         }
     }
 
-    public void printLogToClient(ServerThread user){
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(log_file));
-            BufferedWriter writer = new BufferedWriter(new PrintWriter(user.socket.getOutputStream(), true));
-            String line;
-            while ((line = reader.readLine()) != null){
-                writer.write(line);
-                writer.newLine();
-                writer.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void writeLog_File(String msg){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(log_file,true));
@@ -41,12 +25,5 @@ public class LogChat {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean isGet_log(String method){
-        if(method.equals("GET_LOG")){
-            return true;
-        }
-        return false;
     }
 }

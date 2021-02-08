@@ -4,26 +4,39 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class Client extends Thread implements ActionListener {
     private static final int port_number = 12221;
-    private String Sever_name = "158.108.213.135";//ipv4 address ,VPN ku
+    private String server_name;//ipv4 address ,VPN ku
 
     Client_GUI clientGui;
     private String client_name;
     public Socket connect;
     String message;
+    String recieve[];
+    String meth = "GET_MSG";
     PrintWriter output;
     BufferedReader br;
+
+    BoxChatP boxChatP;
 
     public Client(){
         clientGui = new Client_GUI();
 
         clientGui.chat_field.addActionListener(this);
-//        clientGui.history_bt.addActionListener(this);
+        clientGui.client_header_bt.addActionListener(this);
         client_name = JOptionPane.showInputDialog(clientGui.jFrame,"Please,Enter your name","Welcome to " +
                 "Chatroom",JOptionPane.PLAIN_MESSAGE);
+        if(client_name == null){
+            client_name = "unknown";
+        }
+        if(client_name.isBlank()){
+            client_name = "unknown";
+        }
+
+        message = client_name;
         start();
 
 
@@ -38,7 +51,9 @@ public class Client extends Thread implements ActionListener {
                 ConnectToServer();
             }while (connect ==null);
         }
+
         Recieve_message(connect);
+        clientGui.jFrame.setTitle("Client: "+getClient_name());
         clientGui.jFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -57,10 +72,12 @@ public class Client extends Thread implements ActionListener {
 
     public void ConnectToServer() {
         try {
-//            connect = new Socket(InetAddress.getLocalHost(), port_number);
-            connect = new Socket(Sever_name, port_number);
+//            connect = new Socket(server_name, port_number);
+            connect = new Socket(InetAddress.getLocalHost(), port_number);
+
+            boxChatP = new BoxChatP();
             output = new PrintWriter(connect.getOutputStream(), true);
-            output.println(client_name);
+            output.println(boxChatP.BoxChatPMsgFormatter(message,meth));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,8 +86,7 @@ public class Client extends Thread implements ActionListener {
     public void Send_message(){
         try {
             output = new PrintWriter(connect.getOutputStream(), true);
-//            output.println("["+client_name+"]: "+message);
-            output.println(message);
+            output.println(boxChatP.BoxChatPMsgFormatter(message,meth));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,9 +95,10 @@ public class Client extends Thread implements ActionListener {
     public void Recieve_message(Socket socket){
         try {
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            EditedClientTitleName(br);
             while (true){
-                String response = br.readLine();
-                clientGui.chat_area.append("\n"+" "+response + "\n");
+                recieve = br.readLine().split("฿");
+                clientGui.chat_area.append("\n"+" "+recieve[1] + "\n");
             }
         } catch (IOException e) {
             clientGui.chat_area.append("\n"+" Connect failed. " +
@@ -95,10 +112,17 @@ public class Client extends Thread implements ActionListener {
         return client_name;
     }
 
+    public void EditedClientTitleName(BufferedReader reader) throws IOException {
+        recieve = reader.readLine().split("฿");
+        String[] edit_name = recieve[1].split(",");
+        client_name = edit_name[1];
+        clientGui.jFrame.setTitle("Client: "+client_name);
+        clientGui.chat_area.append("\n"+" "+recieve[1] + "\n");
+    }
+
     public void showConnectFailed(){
         clientGui.chat_area.append(" !!Connect failed!!");
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -106,12 +130,14 @@ public class Client extends Thread implements ActionListener {
             message = clientGui.chat_field.getText();
             if (!message.isEmpty()) {
                 clientGui.chat_field.setText("");
-//                clientGui.chat_area.append("\n"+"[\" "+client_name+" \"]: "+message+"\n");
                 Send_message();
             }
         }
-//        if(e.getSource()instanceof JButton){
-//            new LogRoom(this);
-//        }
+        if(e.getSource()instanceof JButton){
+            JButton button = (JButton) e.getSource();
+            if(button.getText().equals("header")){
+                new Client_header(this);
+            }
+        }
     }
 }
