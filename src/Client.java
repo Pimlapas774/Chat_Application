@@ -32,7 +32,7 @@ public class Client extends Thread implements ActionListener {
         if(client_name == null){
             client_name = "unknown";
         }
-        if(client_name.isBlank()){
+        if(client_name.isEmpty()){
             client_name = "unknown";
         }
 
@@ -70,9 +70,8 @@ public class Client extends Thread implements ActionListener {
     }
 
 
-    public void ConnectToServer() {
+    public void ConnectToServer() {//136
         try {
-//            connect = new Socket(server_name, port_number);
             connect = new Socket(InetAddress.getLocalHost(), port_number);
 
             boxChatP = new BoxChatP();
